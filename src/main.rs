@@ -1,10 +1,9 @@
 use actix_cors::Cors;
 use actix_web::{http, middleware, App, HttpServer};
 use dotenv::dotenv;
-use mongodb::{bson::doc, error::Result, options::ClientOptions, sync::Client};
+use mongodb::{bson::doc, options::ClientOptions, sync::Client};
 use std::env;
 use user_service::UserService;
-use std::error;
 
 mod user_router;
 mod user_service;
@@ -36,7 +35,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
 
-     // Parse your connection string into an options struct
+     // Parse connection string of mongoDB Atlas into an options struct
      let mut client_options =
      ClientOptions::parse("mongodb+srv://root:root@cluster0.cewrv.mongodb.net/test?retryWrites=true")
          .await.expect("Some error message");
@@ -47,9 +46,9 @@ async fn main() -> std::io::Result<()> {
     let client = Client::with_options(client_options).expect("Some error message");
     // Ping the server to see if you can connect to the cluster
     client
-        .database("local")
+        .database("test")
         .run_command(doc! {"ping": 1}, None)
-        .expect("Some error message");
+        .expect("Cannot reach database server");
     println!("Connected successfully.");
     // List the names of the databases in that cluster
     for db_name in client.list_database_names(None, None).expect("Some error message") {
@@ -57,12 +56,12 @@ async fn main() -> std::io::Result<()> {
     }
 
     // Parse a connection string into an options struct.
-   // let database_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
-  //  let client_options = ClientOptions::parse(&database_url).unwrap();
+    // let database_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
+    //  let client_options = ClientOptions::parse(&database_url).unwrap();
 
     // Get a handle to the deployment.
-    //let client = Client::with_options(client_options).unwrap();
-  //  let client = Client::with_uri_str("mongodb+srv://root:root@cluster0.cewrv.mongodb.net/local?retryWrites=true&w=majority").await?;
+    // let client = Client::with_options(client_options).unwrap();
+    // let client = Client::with_uri_str("mongodb+srv://root:root@cluster0.cewrv.mongodb.net/local?retryWrites=true&w=majority").await?;
     // Get a handle to a database.
     let database_name = env::var("DATABASE_NAME").expect("DATABASE_NAME is not set in .env file");
     let db = client.database(&database_name);
