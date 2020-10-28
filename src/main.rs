@@ -38,7 +38,7 @@ async fn main() -> std::io::Result<()> {
 
      // Parse your connection string into an options struct
      let mut client_options =
-     ClientOptions::parse("mongodb+srv://root:root@cluster0.cewrv.mongodb.net/local?retryWrites=true&w=majority")
+     ClientOptions::parse("mongodb+srv://root:root@cluster0.cewrv.mongodb.net/test?retryWrites=true")
          .await.expect("Some error message");
 
     // Manually set an option
